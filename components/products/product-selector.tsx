@@ -35,11 +35,11 @@ export function ProductSelector({
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-border bg-surface-raised p-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-foreground">Selecionar Produto</h3>
+        <h3 className="text-sm font-semibold text-foreground">Select Product</h3>
         {onNew && (
           <Button variant="primary" size="sm" onClick={onNew}>
             <Plus size={13} />
-            Novo produto
+            New product
           </Button>
         )}
       </div>
@@ -52,7 +52,7 @@ export function ProductSelector({
         />
         <input
           type="text"
-          placeholder="Buscar produto..."
+          placeholder="Search products…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full rounded-lg border border-border bg-surface-overlay py-2 pl-8 pr-3 text-sm text-foreground placeholder:text-foreground-subtle focus:border-primary/60 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
@@ -67,7 +67,7 @@ export function ProductSelector({
               key={product.id}
               onClick={() => onSelect(product.id)}
               className={twMerge(
-                'flex flex-col overflow-hidden rounded-xl border transition-all text-left',
+                'flex flex-col overflow-hidden rounded-xl border text-left transition-all',
                 selectedId === product.id
                   ? 'border-primary bg-primary-muted'
                   : 'border-border bg-surface-overlay hover:border-border-strong'
@@ -89,9 +89,7 @@ export function ProductSelector({
                 )}
               </div>
               <div className="p-2">
-                <p className="truncate text-xs font-medium text-foreground">
-                  {product.name}
-                </p>
+                <p className="truncate text-xs font-medium text-foreground">{product.name}</p>
                 <p className="mt-0.5 text-[10px] text-foreground-muted">
                   {product.assetCount} assets
                 </p>
@@ -101,9 +99,7 @@ export function ProductSelector({
         </div>
       ) : (
         <div className="py-8 text-center text-sm text-foreground-muted">
-          {products.length === 0
-            ? 'Nenhum produto cadastrado ainda.'
-            : 'Nenhum resultado para a busca.'}
+          {products.length === 0 ? 'No products added yet.' : 'No results for this search.'}
         </div>
       )}
 
@@ -112,7 +108,7 @@ export function ProductSelector({
         <div className="flex items-center justify-end gap-2 border-t border-border pt-4">
           {onCancel && (
             <Button variant="secondary" size="md" onClick={onCancel}>
-              Cancelar
+              Cancel
             </Button>
           )}
           {onConfirm && (
@@ -121,7 +117,7 @@ export function ProductSelector({
               disabled={!selectedProduct}
               onClick={() => selectedProduct && onConfirm(selectedProduct)}
             >
-              Usar este produto
+              Use this product
             </Button>
           )}
         </div>

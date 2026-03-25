@@ -14,9 +14,9 @@ export interface MockUser {
 
 const MOCK_USER: MockUser = {
   id: 'user-001',
-  name: "Alberto Araújo",
-  email: 'alberto@admanage.ai',
-  avatarInitials: 'A',
+  name: 'Alex Johnson',
+  email: 'alex@admanage.ai',
+  avatarInitials: 'AJ',
 }
 
 interface AppStore {

@@ -66,7 +66,7 @@ export function Toaster() {
                 setToasts((prev) => prev.filter((x) => x.id !== t.id))
               }
               className="ml-auto shrink-0 opacity-60 hover:opacity-100 transition-opacity"
-              aria-label="Fechar notificação"
+                          aria-label="Close notification"
             >
               <X size={14} />
             </button>

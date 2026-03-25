@@ -28,7 +28,7 @@ export function AdGrid({ ads }: AdGridProps) {
 
       {filtered.length === 0 && (
         <div className="py-12 text-center text-sm text-foreground-muted">
-          Nenhum anúncio nesta categoria.
+          No ads in this category.
         </div>
       )}
     </div>

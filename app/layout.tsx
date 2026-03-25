@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'AdManage AI — Gerador de Anúncios com IA',
+  title: 'AdManage AI — AI-Powered Ad Generator',
   description:
-    'Crie anúncios de imagem de alta conversão com inteligência artificial. Navegue por modelos, importe produtos e gere criativos em segundos.',
+    'Create high-converting image ads with artificial intelligence. Browse templates, import your product, and generate creatives in seconds.',
 }
 
 export default function RootLayout({
