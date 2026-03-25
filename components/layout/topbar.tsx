@@ -1,5 +1,6 @@
 import { CreditsDisplay } from './credits-display'
 import { UpgradeButton } from './upgrade-button'
+import { UserAvatar } from './user-avatar'
 import { Settings } from 'lucide-react'
 
 export function Topbar() {
@@ -9,13 +10,11 @@ export function Topbar() {
       <UpgradeButton />
       <button
         className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground"
-        aria-label="Configurações"
+        aria-label="Settings"
       >
         <Settings size={15} />
       </button>
-      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-primary to-purple-400 text-xs font-semibold text-white">
-        U
-      </div>
+      <UserAvatar />
     </header>
   )
 }

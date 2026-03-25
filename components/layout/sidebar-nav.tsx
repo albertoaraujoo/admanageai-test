@@ -10,6 +10,9 @@ import {
   Users,
   BarChart2,
   Rocket,
+  Mic2,
+  Palette,
+  Layers,
 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
 
@@ -28,6 +31,9 @@ const CREATE_LINKS: NavItem[] = [
 const ASSET_LINKS: NavItem[] = [
   { label: 'Products', href: '/products', icon: ShoppingBag },
   { label: 'Avatars', href: '/avatars', icon: Users },
+  { label: 'Voices', href: '/voices', icon: Mic2 },
+  { label: 'Brand Kits', href: '/brand-kits', icon: Palette },
+  { label: 'Smart Assets', href: '/smart-assets', icon: Layers },
 ]
 
 const ANALYZE_LINKS: NavItem[] = [
@@ -49,13 +55,13 @@ function SidebarNavLink({ item }: SidebarLinkProps) {
     <Link
       href={item.href}
       className={twMerge(
-        'flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all',
+        'flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] transition-all',
         isActive
-          ? 'bg-primary-muted text-primary font-medium'
+          ? 'bg-primary/10 text-primary font-medium'
           : 'text-foreground-muted hover:bg-white/5 hover:text-foreground'
       )}
     >
-      <Icon size={15} />
+      <Icon size={14} />
       {item.label}
     </Link>
   )
@@ -77,9 +83,9 @@ function NavSection({ title, items }: { title: string; items: NavItem[] }) {
 export function SidebarNav() {
   return (
     <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-2 py-4">
-      <NavSection title="Criar" items={CREATE_LINKS} />
-      <NavSection title="Gerenciar Ativos" items={ASSET_LINKS} />
-      <NavSection title="Analisar & Lançar" items={ANALYZE_LINKS} />
+      <NavSection title="Create" items={CREATE_LINKS} />
+      <NavSection title="Manage Assets" items={ASSET_LINKS} />
+      <NavSection title="Analyze & Launch Ads" items={ANALYZE_LINKS} />
     </nav>
   )
 }

@@ -5,11 +5,29 @@ import type { GeneratedProject } from '@/types/project'
 
 const INITIAL_CREDITS = 50
 
+export interface MockUser {
+  id: string
+  name: string
+  email: string
+  avatarInitials: string
+}
+
+const MOCK_USER: MockUser = {
+  id: 'user-001',
+  name: "Alberto Araújo",
+  email: 'alberto@admanage.ai',
+  avatarInitials: 'A',
+}
+
 interface AppStore {
+  isLoggedIn: boolean
+  user: MockUser | null
   credits: number
   isPro: boolean
   products: Product[]
   generatedProjects: GeneratedProject[]
+  login: () => void
+  logout: () => void
   spendCredit: () => boolean
   upgradeToPro: () => void
   addProduct: (product: Product) => void
@@ -21,10 +39,33 @@ interface AppStore {
 export const useAppStore = create<AppStore>()(
   persist(
     (set, get) => ({
+      isLoggedIn: false,
+      user: null,
       credits: INITIAL_CREDITS,
       isPro: false,
       products: [],
       generatedProjects: [],
+
+      login: () => {
+        document.cookie = 'admanage-auth=1; path=/; max-age=604800'
+        set({
+          isLoggedIn: true,
+          user: MOCK_USER,
+          credits: INITIAL_CREDITS,
+          isPro: false,
+        })
+      },
+
+      logout: () => {
+        document.cookie = 'admanage-auth=; path=/; max-age=0'
+        set({
+          isLoggedIn: false,
+          user: null,
+          credits: INITIAL_CREDITS,
+          products: [],
+          generatedProjects: [],
+        })
+      },
 
       spendCredit: () => {
         const { credits } = get()

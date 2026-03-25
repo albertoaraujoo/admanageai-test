@@ -9,16 +9,15 @@ export function ProjectsEmptyState() {
         <ImageIcon size={28} className="text-foreground-muted" />
       </div>
       <div className="max-w-sm">
-        <h3 className="text-base font-semibold text-foreground">
-          Nenhum projeto ainda
-        </h3>
+        <h3 className="text-base font-semibold text-foreground">No projects yet</h3>
         <p className="mt-1.5 text-sm text-foreground-muted">
-          Explore os anúncios na Home, clique em &quot;Recreate&quot; e gere sua primeira imagem com IA.
+          Browse ads on the Home page, click &quot;Recreate&quot; and generate your first
+          AI-powered image.
         </p>
       </div>
       <Link href="/">
         <Button variant="primary" size="md">
-          Explorar Anúncios
+          Browse Ads
         </Button>
       </Link>
     </div>

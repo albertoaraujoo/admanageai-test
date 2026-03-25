@@ -28,19 +28,19 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
 
   const handleDownload = () => {
     if (!isPro) {
-      toast.info('Faça upgrade para Pro para baixar sem marca d\'água.')
+      toast.info('Upgrade to Pro to download without watermark.')
       return
     }
     const link = document.createElement('a')
     link.href = project.imageUrl
     link.download = `admanage-${project.id}.jpg`
     link.click()
-    toast.success('Download iniciado!')
+    toast.success('Download started!')
   }
 
   const handleUpgrade = () => {
     upgradeToPro()
-    toast.success('Upgrade para Pro! Marca d\'água removida de todos os seus projetos.')
+    toast.success('Upgraded to Pro! Watermark removed from all your projects.')
   }
 
   return (
@@ -54,7 +54,7 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
     >
       <div className="flex w-full max-w-5xl overflow-hidden rounded-2xl border border-border bg-surface-raised shadow-2xl">
         {/* Image area */}
-        <div className="relative flex-1 bg-black min-h-[400px]">
+        <div className="relative min-h-[400px] flex-1 bg-black">
           <div className="relative h-full min-h-[400px] w-full">
             {project.imageUrl ? (
               <Image
@@ -66,7 +66,7 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
               />
             ) : (
               <div className="flex h-full items-center justify-center">
-                <p className="text-sm text-foreground-muted">Imagem não disponível</p>
+                <p className="text-sm text-foreground-muted">Image not available</p>
               </div>
             )}
 
@@ -90,13 +90,13 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
         <div className="flex w-72 shrink-0 flex-col border-l border-border">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
-            <h2 className="text-sm font-semibold text-foreground line-clamp-1">
+            <h2 className="line-clamp-1 text-sm font-semibold text-foreground">
               {project.title}
             </h2>
             <button
               onClick={onClose}
-              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-foreground-muted hover:bg-white/5 hover:text-foreground transition-colors"
-              aria-label="Fechar"
+              className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground"
+              aria-label="Close"
             >
               <X size={15} />
             </button>
@@ -104,59 +104,52 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
 
           {/* Actions */}
           <div className="flex flex-col gap-3 p-5">
-            {/* Pro upgrade */}
+            {/* Pro upgrade banner */}
             {!isPro && (
               <button
                 onClick={handleUpgrade}
                 className="flex items-center justify-between rounded-xl border border-primary/30 bg-primary-muted p-3 text-left transition-all hover:border-primary/50"
               >
                 <div>
-                  <p className="text-xs font-semibold text-primary">Remover Marca D&apos;água</p>
+                  <p className="text-xs font-semibold text-primary">Remove Watermark</p>
                   <p className="mt-0.5 text-[11px] text-foreground-muted">
-                    Faça upgrade para exportar limpo
+                    Upgrade to export clean images
                   </p>
                 </div>
-                <Sparkles size={16} className="text-primary shrink-0" />
+                <Sparkles size={16} className="shrink-0 text-primary" />
               </button>
             )}
 
             {isPro && (
               <Badge variant="pro" className="w-fit">
                 <Sparkles size={10} />
-                Plano Pro Ativo
+                Pro Plan Active
               </Badge>
             )}
 
             <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleDownload}
-                className="w-full"
-              >
+              <Button variant="secondary" size="sm" onClick={handleDownload} className="w-full">
                 <Download size={13} />
-                Baixar
+                Download
               </Button>
               <Button variant="secondary" size="sm" className="w-full">
                 <Edit size={13} />
-                Editar
+                Edit
               </Button>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="ghost" size="sm" className="w-full">
-                <Maximize2 size={13} />
-                Ampliar
-              </Button>
-            </div>
+            <Button variant="ghost" size="sm" className="w-full">
+              <Maximize2 size={13} />
+              Full screen
+            </Button>
           </div>
 
           {/* Meta */}
           <div className="mt-auto border-t border-border p-5">
             <div className="flex flex-col gap-2 text-xs text-foreground-muted">
               <div className="flex items-center justify-between">
-                <span>Tipo</span>
-                <span className="text-foreground capitalize">{project.type}</span>
+                <span>Type</span>
+                <span className="capitalize text-foreground">{project.type}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span>Status</span>
@@ -170,16 +163,20 @@ export function ImageViewerModal({ project, onClose }: ImageViewerModalProps) {
                   }
                 >
                   {project.status === 'completed'
-                    ? 'Concluído'
+                    ? 'Completed'
                     : project.status === 'generating'
-                      ? 'Gerando...'
-                      : 'Falhou'}
+                      ? 'Generating…'
+                      : 'Failed'}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
-                <span>Criado em</span>
+                <span>Created</span>
                 <span className="text-foreground">
-                  {new Date(project.createdAt).toLocaleDateString('pt-BR')}
+                  {new Date(project.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
                 </span>
               </div>
             </div>
