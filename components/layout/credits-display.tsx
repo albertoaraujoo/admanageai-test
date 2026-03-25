@@ -1,13 +1,35 @@
 'use client'
 
-import { useAppStore } from '@/lib/store'
-import { Zap, AlertCircle } from 'lucide-react'
+import { Zap, AlertCircle, Loader2 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
+import { useCredits } from '@/components/credits/credits-context'
 
 export function CreditsDisplay() {
-  const credits = useAppStore((s) => s.credits)
-  const isLow = credits <= 5
-  const isEmpty = credits === 0
+  const { balance, loading, error } = useCredits()
+
+  const credits = balance ?? 0
+  const isLow = balance !== null && balance <= 5 && balance > 0
+  const isEmpty = balance !== null && balance <= 0
+
+  if (loading && balance === null) {
+    return (
+      <div className="flex items-center gap-1.5 rounded-lg border border-border bg-surface-overlay px-2.5 py-1.5 text-xs font-medium text-foreground-muted">
+        <Loader2 size={12} className="animate-spin shrink-0" />
+        <span>Credits</span>
+      </div>
+    )
+  }
+
+  if (error && balance === null) {
+    return (
+      <div
+        className="max-w-[140px] truncate rounded-lg border border-warning/30 bg-warning/10 px-2.5 py-1.5 text-[11px] font-medium text-warning"
+        title={error}
+      >
+        Credits unavailable
+      </div>
+    )
+  }
 
   return (
     <div
@@ -19,7 +41,11 @@ export function CreditsDisplay() {
             ? 'border-warning/30 bg-warning/10 text-warning'
             : 'border-border bg-surface-overlay text-foreground-muted'
       )}
-      title={isEmpty ? 'No credits available' : `${credits} credits remaining`}
+      title={
+        isEmpty
+          ? 'No API credits — add credits in NanoBanana'
+          : `${credits} API credits remaining`
+      }
     >
       {isEmpty ? (
         <AlertCircle size={12} className="shrink-0" />

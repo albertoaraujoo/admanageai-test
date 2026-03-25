@@ -53,7 +53,7 @@ export function LoginForm() {
 
           {/* Feature pills */}
           <div className="flex flex-wrap gap-2">
-            {['50 free credits', 'No watermark on Pro', 'Instant generation'].map((feat) => (
+            {['Real API credits', 'No watermark on Pro', 'Instant generation'].map((feat) => (
               <span
                 key={feat}
                 className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-foreground-muted backdrop-blur-sm"

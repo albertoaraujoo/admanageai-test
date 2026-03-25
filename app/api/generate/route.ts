@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { fetchNanoBananaAccountCredits } from '@/lib/nanobanana-account'
 
 const BASE_URL = 'https://api.nanobananaapi.ai/api/v1/nanobanana'
 
@@ -25,12 +26,26 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { prompt, credits } = body as { prompt: string; credits: number }
+  const prompt = body.prompt as string
 
-  if (typeof credits !== 'number' || credits <= 0) {
+  try {
+    const remaining = await fetchNanoBananaAccountCredits(apiKey)
+    if (remaining <= 0) {
+      return NextResponse.json(
+        { error: 'Insufficient API credits. Add credits in your NanoBanana account.' },
+        { status: 402 }
+      )
+    }
+  } catch (e) {
+    console.error('[/api/generate] Credit check failed:', e)
     return NextResponse.json(
-      { error: 'Insufficient credits. Please upgrade your plan.' },
-      { status: 402 }
+      {
+        error:
+          e instanceof Error
+            ? e.message
+            : 'Could not verify account credits. Check your API key.',
+      },
+      { status: 502 }
     )
   }
 

@@ -69,11 +69,11 @@ export async function serverGetTaskStatus(taskId: string): Promise<TaskStatusRes
 /**
  * Client-side helper: calls our secure /api/generate route.
  */
-export async function clientStartGeneration(prompt: string, credits: number): Promise<string> {
+export async function clientStartGeneration(prompt: string): Promise<string> {
   const res = await fetch('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, credits }),
+    body: JSON.stringify({ prompt }),
   })
 
   const json = await res.json()
