@@ -7,7 +7,7 @@ import type { Ad } from '@/types/ad'
 import type { Product } from '@/types/product'
 import { useAppStore } from '@/lib/store'
 import { requestCreditsRefresh, useCredits } from '@/components/credits/credits-context'
-import { clientStartGeneration, clientPollStatus } from '@/lib/nanobanana'
+import { startGenerationAndPoll } from '@/lib/generation-flow'
 import { toast } from '@/lib/toast'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -83,8 +83,7 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
 
     startTransition(async () => {
       try {
-        const taskId = await clientStartGeneration(prompt)
-        const imageUrl = await clientPollStatus(taskId)
+        const imageUrl = await startGenerationAndPoll(prompt)
 
         const { updateProject } = useAppStore.getState()
         updateProject(projectId, {

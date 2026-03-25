@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { getAccountCredits } from '@/app/actions/nanobanana'
 
 const REFRESH_EVENT = 'admanage:credits-refresh'
 
@@ -36,15 +37,11 @@ export function CreditsProvider({ children }: { children: ReactNode }) {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/credits')
-      const json = (await res.json()) as { credits?: number; error?: string }
-      if (!res.ok) {
-        throw new Error(json.error || 'Could not load credits.')
+      const result = await getAccountCredits()
+      if (!result.ok) {
+        throw new Error(result.error)
       }
-      if (typeof json.credits !== 'number') {
-        throw new Error('Invalid credits response.')
-      }
-      setBalance(json.credits)
+      setBalance(result.credits)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Could not load credits.'
       setError(msg)
