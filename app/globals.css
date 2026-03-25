@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Superfícies */
+  --color-surface: #0a0a0a;
+  --color-surface-raised: #111111;
+  --color-surface-overlay: #1a1a1a;
+  --color-surface-hover: #1e1e1e;
+
+  /* Marca */
+  --color-primary: #7c5cfc;
+  --color-primary-hover: #6b4ef5;
+  --color-primary-foreground: #ffffff;
+  --color-primary-muted: rgba(124, 92, 252, 0.15);
+
+  /* Texto */
+  --color-foreground: #f4f4f5;
+  --color-foreground-muted: #a1a1aa;
+  --color-foreground-subtle: #52525b;
+
+  /* Bordas */
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+
+  /* Sidebar */
+  --sidebar-width: 220px;
+
+  /* Fontes */
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+
+  /* Raios */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.18);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Base ──────────────────────────────────────────────────── */
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-surface);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Seleção de texto ──────────────────────────────────────── */
+::selection {
+  background-color: rgba(124, 92, 252, 0.3);
+  color: #fff;
+}
+
+/* ── Focus ring global ─────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid rgba(124, 92, 252, 0.6);
+  outline-offset: 2px;
 }
