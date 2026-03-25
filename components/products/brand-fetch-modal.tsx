@@ -28,22 +28,22 @@ const FAKE_BRANDS: Record<string, BrandData> = {
     category: 'SaaS',
   },
   ecommerce: {
-    name: 'Loja Premium',
-    description: 'Produtos premium com entrega rápida para todo o Brasil.',
+    name: 'Premium Store',
+    description: 'Premium products with fast delivery across the country.',
     sellingPoints: [
-      'Frete grátis acima de R$199',
-      'Garantia de 30 dias',
-      'Atendimento 24/7',
+      'Free shipping on orders over $50',
+      '30-day money-back guarantee',
+      '24/7 customer support',
     ],
     category: 'Sale',
   },
   beauty: {
     name: 'Beauté Collection',
-    description: 'Cosméticos naturais e veganos para pele sensível.',
+    description: 'Natural and vegan cosmetics for sensitive skin.',
     sellingPoints: [
       '100% cruelty-free',
-      'Fórmula dermatologicamente testada',
-      'Disponível em 12 tonalidades',
+      'Dermatologically tested formula',
+      'Available in 12 shades',
     ],
     category: 'Beauty & Personal Care',
   },
@@ -54,7 +54,7 @@ function resolveFakeBrand(url: string): BrandData {
   if (lower.includes('beauty') || lower.includes('cosmet') || lower.includes('skin')) {
     return FAKE_BRANDS.beauty
   }
-  if (lower.includes('shop') || lower.includes('store') || lower.includes('loja')) {
+  if (lower.includes('shop') || lower.includes('store')) {
     return FAKE_BRANDS.ecommerce
   }
   return FAKE_BRANDS.default
@@ -91,21 +91,19 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <div className="flex items-center gap-2">
             <Globe size={16} className="text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">
-              Importar Produto por URL
-            </h2>
+            <h2 className="text-sm font-semibold text-foreground">Import from URL</h2>
           </div>
           <button
             onClick={onClose}
-            className="flex h-7 w-7 items-center justify-center rounded-lg text-foreground-muted hover:bg-white/5 hover:text-foreground transition-colors"
-            aria-label="Fechar"
+            className="flex h-7 w-7 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground"
+            aria-label="Close"
           >
             <X size={15} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 flex flex-col gap-5">
+        <div className="flex flex-col gap-5 p-6">
           {!done ? (
             <>
               <div>
@@ -113,7 +111,7 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
                   htmlFor="brand-url"
                   className="mb-2 block text-xs font-medium text-foreground-muted"
                 >
-                  URL do Produto ou Marca
+                  Product or Brand URL
                 </label>
                 <div className="flex gap-2">
                   <input
@@ -122,52 +120,44 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleFetch()}
-                    placeholder="https://sua-loja.com/produto"
+                    placeholder="https://your-store.com/product"
                     className="flex-1 rounded-lg border border-border bg-surface-overlay px-3 py-2.5 text-sm text-foreground placeholder:text-foreground-subtle focus:border-primary/60 focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
                     disabled={isPending}
                   />
                 </div>
                 <p className="mt-2 text-[11px] text-foreground-subtle">
-                  Nossa IA irá extrair nome, descrição e diferenciais automaticamente.
+                  Our AI will extract the product name, description and selling points automatically.
                 </p>
               </div>
 
-              <Button
-                onClick={handleFetch}
-                disabled={!url.trim() || isPending}
-                size="md"
-                className="w-full"
-              >
+              <Button onClick={handleFetch} disabled={!url.trim() || isPending} size="md" className="w-full">
                 {isPending ? (
                   <>
                     <Loader2 size={14} className="animate-spin" />
-                    Analisando URL...
+                    Analyzing URL…
                   </>
                 ) : (
                   <>
                     <Globe size={14} />
-                    Importar
+                    Import
                   </>
                 )}
               </Button>
 
-              {/* Loading steps */}
               {isPending && (
                 <div className="flex flex-col gap-2">
-                  {[
-                    'Acessando a URL...',
-                    'Extraindo informações do produto...',
-                    'Organizando dados...',
-                  ].map((step, i) => (
-                    <div key={step} className="flex items-center gap-2 text-xs text-foreground-muted">
-                      <Loader2
-                        size={11}
-                        className="animate-spin text-primary"
-                        style={{ animationDelay: `${i * 0.3}s` }}
-                      />
-                      {step}
-                    </div>
-                  ))}
+                  {['Accessing the URL…', 'Extracting product info…', 'Organizing data…'].map(
+                    (step, i) => (
+                      <div key={step} className="flex items-center gap-2 text-xs text-foreground-muted">
+                        <Loader2
+                          size={11}
+                          className="animate-spin text-primary"
+                          style={{ animationDelay: `${i * 0.3}s` }}
+                        />
+                        {step}
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </>
@@ -175,29 +165,32 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-2 text-sm text-success">
                 <CheckCircle size={16} />
-                <span className="font-medium">Produto encontrado!</span>
+                <span className="font-medium">Product found!</span>
               </div>
 
-              <div className="rounded-xl border border-border bg-surface-overlay p-4 flex flex-col gap-3">
+              <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface-overlay p-4">
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-foreground-subtle mb-0.5">
-                    Nome
+                  <p className="mb-0.5 text-[10px] uppercase tracking-wider text-foreground-subtle">
+                    Name
                   </p>
                   <p className="text-sm font-semibold text-foreground">{fetched.name}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-foreground-subtle mb-0.5">
-                    Descrição
+                  <p className="mb-0.5 text-[10px] uppercase tracking-wider text-foreground-subtle">
+                    Description
                   </p>
                   <p className="text-sm text-foreground-muted">{fetched.description}</p>
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-wider text-foreground-subtle mb-1">
-                    Diferenciais
+                  <p className="mb-1 text-[10px] uppercase tracking-wider text-foreground-subtle">
+                    Selling Points
                   </p>
                   <ul className="flex flex-col gap-1">
                     {fetched.sellingPoints.map((sp) => (
-                      <li key={sp} className="flex items-start gap-1.5 text-xs text-foreground-muted">
+                      <li
+                        key={sp}
+                        className="flex items-start gap-1.5 text-xs text-foreground-muted"
+                      >
                         <CheckCircle size={11} className="mt-0.5 shrink-0 text-success" />
                         {sp}
                       </li>
@@ -207,11 +200,16 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="secondary" size="md" onClick={() => setDone(false)} className="flex-1">
-                  Tentar outro URL
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setDone(false)}
+                  className="flex-1"
+                >
+                  Try another URL
                 </Button>
                 <Button size="md" onClick={handleUse} className="flex-1">
-                  Usar estes dados
+                  Use this data
                 </Button>
               </div>
             </div>

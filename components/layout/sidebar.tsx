@@ -1,5 +1,5 @@
-import { ChevronDown } from 'lucide-react'
 import { SidebarNav } from './sidebar-nav'
+import { BrandSelector } from './brand-selector'
 
 export function Sidebar() {
   return (
@@ -25,14 +25,8 @@ export function Sidebar() {
         </span>
       </div>
 
-      {/* Brand selector */}
-      <button className="flex items-center justify-between gap-2 border-b border-border px-4 py-3 text-sm text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground">
-        <div className="flex items-center gap-2">
-          <div className="h-5 w-5 rounded-full bg-gradient-to-br from-primary to-purple-400" />
-          <span className="truncate text-xs font-medium">Minha Marca</span>
-        </div>
-        <ChevronDown size={13} />
-      </button>
+      {/* Brand selector — client component reads user from store */}
+      <BrandSelector />
 
       <SidebarNav />
     </aside>

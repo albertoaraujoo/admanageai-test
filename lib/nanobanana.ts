@@ -1,8 +1,13 @@
+/**
+ * Server-side NanoBanana API client.
+ * Uses NANO_BANANA_API_KEY (no NEXT_PUBLIC prefix).
+ * Never import this directly from client components — use the /api/generate routes instead.
+ */
+
 const BASE_URL = 'https://api.nanobananaapi.ai/api/v1/nanobanana'
 
 interface GenerateParams {
   prompt: string
-  callBackUrl?: string
 }
 
 interface GenerateResponse {
@@ -18,15 +23,13 @@ interface TaskStatusResponse {
     taskId: string
     successFlag: 0 | 1 | 2 | 3
     errorMessage?: string
-    response?: {
-      resultImageUrl: string
-    }
+    response?: { resultImageUrl: string }
   }
 }
 
-async function generateImage(params: GenerateParams): Promise<string> {
-  const apiKey = process.env.NEXT_PUBLIC_NANOBANANA_API_KEY
-  if (!apiKey) throw new Error('Chave de API não configurada.')
+export async function serverGenerateImage(params: GenerateParams): Promise<string> {
+  const apiKey = process.env.NANO_BANANA_API_KEY
+  if (!apiKey) throw new Error('API key not configured.')
 
   const res = await fetch(`${BASE_URL}/generate`, {
     method: 'POST',
@@ -38,33 +41,51 @@ async function generateImage(params: GenerateParams): Promise<string> {
       prompt: params.prompt,
       type: 'TEXTTOIAMGE',
       numImages: 1,
-      ...(params.callBackUrl && { callBackUrl: params.callBackUrl }),
     }),
   })
 
   const json: GenerateResponse = await res.json()
   if (!res.ok || json.code !== 200) {
-    throw new Error(json.msg || 'Falha ao iniciar geração.')
+    throw new Error(json.msg || 'Failed to start generation.')
   }
 
   return json.data.taskId
 }
 
-async function getTaskStatus(taskId: string): Promise<TaskStatusResponse['data']> {
-  const apiKey = process.env.NEXT_PUBLIC_NANOBANANA_API_KEY
-  if (!apiKey) throw new Error('Chave de API não configurada.')
+export async function serverGetTaskStatus(taskId: string): Promise<TaskStatusResponse['data']> {
+  const apiKey = process.env.NANO_BANANA_API_KEY
+  if (!apiKey) throw new Error('API key not configured.')
 
   const res = await fetch(`${BASE_URL}/record-info?taskId=${taskId}`, {
     headers: { Authorization: `Bearer ${apiKey}` },
   })
 
   const json: TaskStatusResponse = await res.json()
-  if (!res.ok) throw new Error(json.msg || 'Falha ao consultar status.')
+  if (!res.ok) throw new Error(json.msg || 'Failed to query status.')
 
   return json.data
 }
 
-async function waitForCompletion(
+/**
+ * Client-side helper: calls our secure /api/generate route.
+ */
+export async function clientStartGeneration(prompt: string, credits: number): Promise<string> {
+  const res = await fetch('/api/generate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt, credits }),
+  })
+
+  const json = await res.json()
+  if (!res.ok) throw new Error(json.error || 'Failed to start generation.')
+
+  return json.taskId as string
+}
+
+/**
+ * Client-side helper: polls our secure /api/generate/status route.
+ */
+export async function clientPollStatus(
   taskId: string,
   onProgress?: () => void,
   maxWaitMs = 120_000
@@ -72,24 +93,30 @@ async function waitForCompletion(
   const startTime = Date.now()
 
   while (Date.now() - startTime < maxWaitMs) {
-    const status = await getTaskStatus(taskId)
+    const res = await fetch(`/api/generate/status?taskId=${taskId}`)
+    const json = await res.json()
+
+    if (!res.ok) throw new Error(json.error || 'Failed to check status.')
+
     onProgress?.()
 
-    switch (status.successFlag) {
-      case 1:
-        if (!status.response?.resultImageUrl) {
-          throw new Error('Imagem gerada mas URL não encontrada.')
-        }
-        return status.response.resultImageUrl
-      case 2:
-      case 3:
-        throw new Error(status.errorMessage ?? 'Geração falhou.')
+    const { successFlag, imageUrl, errorMessage } = json as {
+      successFlag: 0 | 1 | 2 | 3
+      imageUrl: string | null
+      errorMessage: string | null
+    }
+
+    if (successFlag === 1) {
+      if (!imageUrl) throw new Error('Generation complete but no image URL returned.')
+      return imageUrl
+    }
+
+    if (successFlag === 2 || successFlag === 3) {
+      throw new Error(errorMessage ?? 'Generation failed.')
     }
 
     await new Promise((resolve) => setTimeout(resolve, 3000))
   }
 
-  throw new Error('Timeout na geração da imagem.')
+  throw new Error('Generation timed out. Please try again.')
 }
-
-export const nanobanana = { generateImage, waitForCompletion }

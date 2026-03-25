@@ -50,12 +50,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
           ) : project.status === 'generating' ? (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2">
               <Loader2 size={22} className="animate-spin text-primary" />
-              <p className="text-xs text-foreground-muted">Gerando...</p>
+              <p className="text-xs text-foreground-muted">Generating…</p>
             </div>
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2">
               <AlertCircle size={22} className="text-destructive" />
-              <p className="text-xs text-foreground-muted">Falhou</p>
+              <p className="text-xs text-foreground-muted">Failed</p>
             </div>
           )}
         </div>
@@ -65,19 +65,22 @@ export function ProjectCard({ project }: ProjectCardProps) {
           <p className="truncate text-xs font-medium text-foreground">{project.title}</p>
           <div className="mt-1.5 flex items-center justify-between gap-2">
             <span className="text-[11px] text-foreground-subtle">
-              {new Date(project.createdAt).toLocaleDateString('pt-BR')}
+              {new Date(project.createdAt).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+              })}
             </span>
             {project.status === 'generating' ? (
               <Badge variant="default">
                 <Loader2 size={10} className="animate-spin" />
-                Gerando
+                Generating
               </Badge>
             ) : project.status === 'failed' ? (
-              <Badge variant="destructive">Falhou</Badge>
+              <Badge variant="destructive">Failed</Badge>
             ) : (
               <Badge variant="default">
                 <ImageIcon size={9} />
-                Imagem
+                Image
               </Badge>
             )}
           </div>
@@ -86,10 +89,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       {viewerOpen && (
         <ModalPortal>
-          <ImageViewerModal
-            project={project}
-            onClose={() => setViewerOpen(false)}
-          />
+          <ImageViewerModal project={project} onClose={() => setViewerOpen(false)} />
         </ModalPortal>
       )}
     </>

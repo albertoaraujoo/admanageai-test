@@ -19,7 +19,7 @@ export function CreditsDisplay() {
             ? 'border-warning/30 bg-warning/10 text-warning'
             : 'border-border bg-surface-overlay text-foreground-muted'
       )}
-      title={isEmpty ? 'Sem créditos disponíveis' : `${credits} créditos restantes`}
+      title={isEmpty ? 'No credits available' : `${credits} credits remaining`}
     >
       {isEmpty ? (
         <AlertCircle size={12} className="shrink-0" />
@@ -28,15 +28,13 @@ export function CreditsDisplay() {
           size={12}
           className={twMerge(
             'shrink-0',
-            isLow ? 'text-warning fill-warning' : 'text-amber-400 fill-amber-400'
+            isLow ? 'fill-warning text-warning' : 'fill-amber-400 text-amber-400'
           )}
         />
       )}
       <span>
-        <span className={isEmpty ? 'text-destructive' : 'text-foreground'}>
-          {credits}
-        </span>{' '}
-        créditos
+        <span className={isEmpty ? 'text-destructive' : 'text-foreground'}>{credits}</span>{' '}
+        credits
       </span>
     </div>
   )

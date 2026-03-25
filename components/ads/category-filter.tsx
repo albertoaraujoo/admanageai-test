@@ -28,7 +28,7 @@ export function CategoryFilter({ onFilterChange }: CategoryFilterProps) {
             : 'border border-border text-foreground-muted hover:text-foreground hover:border-border-strong'
         )}
       >
-        Todos
+        All
       </button>
       {AD_CATEGORIES.map((cat) => (
         <button

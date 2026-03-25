@@ -36,7 +36,7 @@ export function AdCard({ ad }: AdCardProps) {
         {/* New badge */}
         {ad.isNew && (
           <div className="absolute right-2 top-2">
-            <Badge variant="primary">Novo</Badge>
+            <Badge variant="primary">New</Badge>
           </div>
         )}
 
