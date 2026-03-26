@@ -6,7 +6,8 @@ import { X, RefreshCw, Package, ImageIcon, Wand2, ArrowRight } from 'lucide-reac
 import type { Ad } from '@/types/ad'
 import type { Product } from '@/types/product'
 import { useAppStore } from '@/lib/store'
-import { clientStartGeneration, clientPollStatus } from '@/lib/nanobanana'
+import { requestCreditsRefresh, useCredits } from '@/components/credits/credits-context'
+import { startGenerationAndPoll } from '@/lib/generation-flow'
 import { toast } from '@/lib/toast'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -31,7 +32,8 @@ function buildPrompt(ad: Ad, product: Product): string {
 }
 
 export function RecreateModal({ ad, onClose }: RecreateModalProps) {
-  const { products, credits, spendCredit, isPro, addProject } = useAppStore()
+  const { products, isPro, addProject } = useAppStore()
+  const { balance: apiCredits } = useCredits()
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     products[0]?.id ?? null
   )
@@ -56,14 +58,8 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
       return
     }
 
-    if (credits <= 0) {
-      toast.error('No credits remaining. Upgrade to Pro to continue.')
-      return
-    }
-
-    const credited = spendCredit()
-    if (!credited) {
-      toast.error('No credits remaining. Upgrade to Pro to continue.')
+    if (apiCredits !== null && apiCredits <= 0) {
+      toast.error('No API credits left. Add credits in your NanoBanana account.')
       return
     }
 
@@ -87,8 +83,7 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
 
     startTransition(async () => {
       try {
-        const taskId = await clientStartGeneration(prompt, credits)
-        const imageUrl = await clientPollStatus(taskId)
+        const imageUrl = await startGenerationAndPoll(prompt)
 
         const { updateProject } = useAppStore.getState()
         updateProject(projectId, {
@@ -100,11 +95,13 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
         setGeneratedImageUrl(imageUrl)
         setStep('done')
         toast.success('Image generated successfully!')
+        requestCreditsRefresh()
       } catch (err) {
         const { updateProject } = useAppStore.getState()
         updateProject(projectId, { status: 'failed' })
         setStep('select')
         toast.error(err instanceof Error ? err.message : 'Generation failed. Please try again.')
+        requestCreditsRefresh()
       }
     })
   }
@@ -173,14 +170,18 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
           {step === 'select' && (
             <div className="border-t border-border p-5">
               {/* Credits warning */}
-              {credits <= 5 && credits > 0 && (
+              {apiCredits !== null && apiCredits <= 5 && apiCredits > 0 && (
                 <p className="mb-3 text-center text-[11px] text-warning">
-                  ⚠️ {credits} credit{credits !== 1 ? 's' : ''} remaining
+                  ⚠️ {apiCredits} API credit{apiCredits !== 1 ? 's' : ''} remaining
                 </p>
               )}
               <Button
                 onClick={handleGenerate}
-                disabled={!selectedProduct || isPending || credits <= 0}
+                disabled={
+                  !selectedProduct ||
+                  isPending ||
+                  (apiCredits !== null && apiCredits <= 0)
+                }
                 size="lg"
                 className="w-full"
               >
