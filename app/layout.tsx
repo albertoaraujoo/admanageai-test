@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Providers } from '@/components/providers'
+import { auth } from '@/auth'
 import './globals.css'
 
 const geistSans = Geist({
@@ -19,16 +20,18 @@ export const metadata: Metadata = {
     'Create high-converting image ads with artificial intelligence. Browse templates, import your product, and generate creatives in seconds.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth()
+
   return (
     <html
-      lang="pt-BR"
+      lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
       <body className="h-full bg-surface text-foreground antialiased">
-        <Providers>{children}</Providers>
+        <Providers session={session}>{children}</Providers>
       </body>
     </html>
   )

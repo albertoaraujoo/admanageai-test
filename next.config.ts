@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '**.nanobananaapi.ai',
       },
+      {
+        protocol: 'https',
+        hostname: '**.googleusercontent.com',
+      },
     ],
   },
 }

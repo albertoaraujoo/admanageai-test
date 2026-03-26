@@ -1,18 +1,27 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { useAppStore } from '@/lib/store'
 import { LogOut } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function UserAvatar() {
-  const user = useAppStore((s) => s.user)
-  const logout = useAppStore((s) => s.logout)
-  const router = useRouter()
+  const { data: session, status } = useSession()
+  const clearWorkspace = useAppStore((s) => s.clearWorkspace)
   const [open, setOpen] = useState(false)
+  const [imageFailed, setImageFailed] = useState(false)
 
-  const initials = user?.name
-    ? user.name
+  const name = session?.user?.name ?? ''
+  const imageUrl = session?.user?.image
+  const showPhoto = Boolean(imageUrl && !imageFailed)
+
+  useEffect(() => {
+    setImageFailed(false)
+  }, [imageUrl])
+
+  const initials = name
+    ? name
         .split(' ')
         .map((n) => n[0])
         .slice(0, 2)
@@ -20,19 +29,38 @@ export function UserAvatar() {
         .toUpperCase()
     : 'U'
 
-  function handleLogout() {
-    logout()
-    router.push('/login')
+  async function handleLogout() {
+    setOpen(false)
+    clearWorkspace()
+    await signOut({ callbackUrl: '/login' })
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="flex h-8 w-8 animate-pulse items-center justify-center rounded-full bg-surface-overlay" />
+    )
   }
 
   return (
     <div className="relative">
       <button
+        type="button"
         aria-label="User menu"
         onClick={() => setOpen((v) => !v)}
-        className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-purple-400 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
+        className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary to-purple-400 text-xs font-bold text-white shadow-md transition-transform hover:scale-105"
       >
-        {initials}
+        {showPhoto && imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={name ? `${name} profile` : 'Profile'}
+            fill
+            sizes="32px"
+            className="object-cover"
+            onError={() => setImageFailed(true)}
+          />
+        ) : (
+          initials
+        )}
       </button>
 
       {open && (
@@ -40,8 +68,8 @@ export function UserAvatar() {
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-10 z-50 min-w-48 overflow-hidden rounded-xl border border-border bg-surface-raised shadow-xl">
             <div className="border-b border-border px-4 py-3">
-              <p className="text-xs font-semibold text-foreground">{user?.name ?? 'User'}</p>
-              <p className="text-xs text-foreground-muted">{user?.email ?? ''}</p>
+              <p className="text-xs font-semibold text-foreground">{name || 'User'}</p>
+              <p className="text-xs text-foreground-muted">{session?.user?.email ?? ''}</p>
             </div>
             <button
               onClick={handleLogout}
