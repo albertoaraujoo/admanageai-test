@@ -15,7 +15,7 @@ export function ProjectsEmptyState() {
           AI-powered image.
         </p>
       </div>
-      <Link href="/">
+      <Link href="/home">
         <Button variant="primary" size="md">
           Browse Ads
         </Button>

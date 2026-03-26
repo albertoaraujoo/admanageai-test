@@ -16,12 +16,13 @@ export default {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl
       const isLogin = pathname.startsWith('/login')
+      const isPublic = pathname === '/' || isLogin
       const isLoggedIn = !!auth?.user
 
       if (isLogin && isLoggedIn) {
-        return NextResponse.redirect(new URL('/', request.nextUrl))
+        return NextResponse.redirect(new URL('/home', request.nextUrl))
       }
-      if (!isLogin && !isLoggedIn) {
+      if (!isPublic && !isLoggedIn) {
         return NextResponse.redirect(new URL('/login', request.nextUrl))
       }
       return true

@@ -23,7 +23,7 @@ interface NavItem {
 }
 
 const CREATE_LINKS: NavItem[] = [
-  { label: 'Home', href: '/', icon: Home },
+  { label: 'Home', href: '/home', icon: Home },
   { label: 'Market Trends', href: '/trends', icon: TrendingUp },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
 ]

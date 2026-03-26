@@ -82,3 +82,25 @@ body {
   outline: 2px solid rgba(124, 92, 252, 0.6);
   outline-offset: 2px;
 }
+
+/* ── Marketing landing marquee ─────────────────────────────── */
+@keyframes landing-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.landing-marquee {
+  animation: landing-marquee-scroll 45s linear infinite;
+}
+
+.landing-hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.landing-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

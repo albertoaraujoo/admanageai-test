@@ -9,7 +9,7 @@ export function LoginForm() {
 
   function handleGoogleLogin() {
     startTransition(async () => {
-      await signIn('google', { callbackUrl: '/' })
+      await signIn('google', { callbackUrl: '/home' })
     })
   }
 
