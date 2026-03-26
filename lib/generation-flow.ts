@@ -5,10 +5,11 @@ import { getGenerationStatus, startImageGeneration } from '@/app/actions/nanoban
 
 export async function startGenerationAndPoll(
   prompt: string,
+  imageUrl?: string,
   onProgress?: () => void,
   maxWaitMs = 120_000
 ): Promise<string> {
-  const started = await startImageGeneration(prompt)
+  const started = await startImageGeneration(prompt, imageUrl)
   if (!started.ok) {
     throw new Error(started.error)
   }

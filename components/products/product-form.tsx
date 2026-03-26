@@ -73,6 +73,9 @@ export function ProductForm() {
   const handleBrandFetch = (data: BrandData) => {
     setPrefilled(data)
     setSellingPoints(data.sellingPoints)
+    if (data.imageUrl) {
+      setImagePreview(data.imageUrl)
+    }
     toast.success('Data imported! Review the fields and save your product.')
   }
 

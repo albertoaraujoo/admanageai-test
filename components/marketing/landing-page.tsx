@@ -4,6 +4,37 @@ import { LandingCarousel } from '@/components/marketing/landing-carousel'
 import { LandingCtaButton } from '@/components/marketing/landing-cta-button'
 import { LandingHeroIntro } from '@/components/marketing/landing-hero-intro'
 
+/** Creatify marketing hero texture (Framer CDN) — responsive widths */
+const HERO_TEXTURE_BASE =
+  'https://framerusercontent.com/images/jBUMVVFjKCBRw4l4EEvLSAq3ik4.png'
+
+const HERO_TEXTURE_SRCSET = [
+  `${HERO_TEXTURE_BASE}?scale-down-to=512&width=2880&height=2190 512w`,
+  `${HERO_TEXTURE_BASE}?scale-down-to=1024&width=2880&height=2190 1024w`,
+  `${HERO_TEXTURE_BASE}?scale-down-to=2048&width=2880&height=2190 2048w`,
+  `${HERO_TEXTURE_BASE}?width=2880&height=2190 2880w`,
+].join(', ')
+
+const HERO_TEXTURE_FALLBACK = `${HERO_TEXTURE_BASE}?width=2880&height=2190`
+
+function LandingHeroTexture() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+      <img
+        src={HERO_TEXTURE_FALLBACK}
+        srcSet={HERO_TEXTURE_SRCSET}
+        sizes="100vw"
+        width={2880}
+        height={2190}
+        alt=""
+        decoding="async"
+        fetchPriority="high"
+        className="h-full min-h-[min(92vh,880px)] w-full object-cover object-[center_32%] will-change-transform"
+      />
+    </div>
+  )
+}
+
 const NAV_MAIN = [
   { label: 'Platform', href: '#platform', hasChevron: true },
   { label: 'API', href: '#platform', hasChevron: false },
@@ -120,21 +151,22 @@ export function LandingPage() {
     <div className="relative min-h-screen overflow-x-hidden">
       {/* ── Dark hero band (Creatify-style mesh) ───────────────── */}
       <div className="relative min-h-[min(92vh,880px)] pb-24 pt-0 text-white">
+        <LandingHeroTexture />
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 z-1"
           aria-hidden
           style={{
             background: `
-              radial-gradient(ellipse 100% 80% at 50% 100%, rgba(99, 102, 241, 0.45), transparent 55%),
-              radial-gradient(ellipse 70% 50% at 15% 20%, rgba(59, 130, 246, 0.35), transparent 50%),
-              radial-gradient(ellipse 55% 45% at 90% 15%, rgba(192, 132, 252, 0.3), transparent 45%),
-              radial-gradient(ellipse 60% 40% at 80% 85%, rgba(253, 186, 116, 0.2), transparent 50%),
-              linear-gradient(180deg, #050510 0%, #0a0a12 40%, #080816 100%)
+              radial-gradient(ellipse 100% 80% at 50% 100%, rgba(99, 102, 241, 0.42), transparent 55%),
+              radial-gradient(ellipse 70% 50% at 15% 20%, rgba(59, 130, 246, 0.32), transparent 50%),
+              radial-gradient(ellipse 55% 45% at 90% 15%, rgba(192, 132, 252, 0.26), transparent 45%),
+              radial-gradient(ellipse 60% 40% at 80% 85%, rgba(253, 186, 116, 0.18), transparent 50%),
+              linear-gradient(180deg, rgba(5, 5, 16, 0.72) 0%, rgba(10, 10, 18, 0.45) 42%, rgba(8, 8, 22, 0.78) 100%)
             `,
           }}
         />
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 z-2 opacity-[0.035]"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
           }}

@@ -39,7 +39,10 @@ export async function getAccountCredits(): Promise<GetCreditsResult> {
   }
 }
 
-export async function startImageGeneration(prompt: string): Promise<StartGenerationResult> {
+export async function startImageGeneration(
+  prompt: string,
+  imageUrl?: string
+): Promise<StartGenerationResult> {
   const apiKey = requireApiKey()
   if (!apiKey) {
     return { ok: false, error: 'API key not configured on the server.' }
@@ -67,7 +70,7 @@ export async function startImageGeneration(prompt: string): Promise<StartGenerat
   }
 
   try {
-    const taskId = await serverGenerateImage({ prompt: trimmed })
+    const taskId = await serverGenerateImage({ prompt: trimmed, imageUrl })
     return { ok: true, taskId }
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Failed to start generation.'

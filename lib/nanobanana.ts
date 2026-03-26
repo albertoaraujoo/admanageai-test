@@ -7,6 +7,8 @@ const BASE_URL = 'https://api.nanobananaapi.ai/api/v1/nanobanana'
 
 interface GenerateParams {
   prompt: string
+  /** HTTPS image URL to use as the source for image-to-image generation. */
+  imageUrl?: string
 }
 
 interface GenerateResponse {
@@ -38,8 +40,9 @@ export async function serverGenerateImage(params: GenerateParams): Promise<strin
     },
     body: JSON.stringify({
       prompt: params.prompt,
-      type: 'TEXTTOIAMGE',
+      type: params.imageUrl?.startsWith('https://') ? 'IMAGETOIMAGE' : 'TEXTTOIMAGE',
       numImages: 1,
+      ...(params.imageUrl?.startsWith('https://') && { image_url: params.imageUrl }),
     }),
   })
 

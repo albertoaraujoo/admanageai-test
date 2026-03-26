@@ -1,6 +1,7 @@
 'use client'
 
 import { useTransition, useState } from 'react'
+import Image from 'next/image'
 import { X, Globe, Loader2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -14,6 +15,7 @@ export interface BrandData {
   description: string
   sellingPoints: string[]
   category: string
+  imageUrl: string
 }
 
 const FAKE_BRANDS: Record<string, BrandData> = {
@@ -26,6 +28,7 @@ const FAKE_BRANDS: Record<string, BrandData> = {
       '1M+ ads launched monthly',
     ],
     category: 'SaaS',
+    imageUrl: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=800&fit=crop',
   },
   ecommerce: {
     name: 'Premium Store',
@@ -36,6 +39,7 @@ const FAKE_BRANDS: Record<string, BrandData> = {
       '24/7 customer support',
     ],
     category: 'Sale',
+    imageUrl: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&fit=crop',
   },
   beauty: {
     name: 'Beauté Collection',
@@ -46,6 +50,7 @@ const FAKE_BRANDS: Record<string, BrandData> = {
       'Available in 12 shades',
     ],
     category: 'Beauty & Personal Care',
+    imageUrl: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&fit=crop',
   },
 }
 
@@ -169,6 +174,21 @@ export function BrandFetchModal({ onClose, onFetch }: BrandFetchModalProps) {
               </div>
 
               <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface-overlay p-4">
+                {fetched.imageUrl && (
+                  <div className="relative h-32 w-full overflow-hidden rounded-lg">
+                    <Image
+                      src={fetched.imageUrl}
+                      alt={fetched.name}
+                      fill
+                      className="object-cover"
+                      sizes="400px"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
+                    <span className="absolute bottom-2 left-2 rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+                      Auto Photo
+                    </span>
+                  </div>
+                )}
                 <div>
                   <p className="mb-0.5 text-[10px] uppercase tracking-wider text-foreground-subtle">
                     Name

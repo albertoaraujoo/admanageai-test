@@ -18,14 +18,14 @@ interface RecreateModalProps {
 }
 
 function buildPrompt(ad: Ad, product: Product): string {
+  const points = product.sellingPoints.filter(Boolean)
   return [
-    `Create a high-impact static image advertisement for "${product.name}".`,
-    product.description ? `Product description: ${product.description}.` : '',
-    product.sellingPoints.filter(Boolean).length > 0
-      ? `Key selling points: ${product.sellingPoints.filter(Boolean).join(', ')}.`
-      : '',
-    `Visual style inspired by: "${ad.title}". Category: ${ad.category}.`,
-    'Make it professional, eye-catching, and conversion-focused.',
+    'Professional studio advertisement.',
+    'Place the product from the attached image into a high-end commercial scene.',
+    `Style inspiration: ${ad.title} – ${ad.category}.`,
+    'Keep the product appearance consistent.',
+    `Product: ${product.name}.`,
+    points.length > 0 ? points.join(', ') + '.' : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -33,7 +33,7 @@ function buildPrompt(ad: Ad, product: Product): string {
 
 export function RecreateModal({ ad, onClose }: RecreateModalProps) {
   const { products, isPro, addProject } = useAppStore()
-  const { balance: apiCredits } = useCredits()
+  const { balance: apiCredits, optimisticDecrement } = useCredits()
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     products[0]?.id ?? null
   )
@@ -83,7 +83,10 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
 
     startTransition(async () => {
       try {
-        const imageUrl = await startGenerationAndPoll(prompt)
+        const productImageUrl = selectedProduct.imageUrl?.startsWith('https://')
+          ? selectedProduct.imageUrl
+          : undefined
+        const imageUrl = await startGenerationAndPoll(prompt, productImageUrl)
 
         const { updateProject } = useAppStore.getState()
         updateProject(projectId, {
@@ -94,6 +97,7 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
 
         setGeneratedImageUrl(imageUrl)
         setStep('done')
+        optimisticDecrement()
         toast.success('Image generated successfully!')
         requestCreditsRefresh()
       } catch (err) {
@@ -127,7 +131,7 @@ export function RecreateModal({ ad, onClose }: RecreateModalProps) {
               sizes="500px"
             />
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
           </div>
           <div className="p-4">
             <p className="text-xs font-semibold text-white/90">{ad.title}</p>
