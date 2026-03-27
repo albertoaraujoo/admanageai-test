@@ -13,9 +13,9 @@ function AdGridSkeleton() {
           <Skeleton key={i} className="h-7 w-20" />
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton key={i} className="aspect-square rounded-xl" />
+          <Skeleton key={i} className="aspect-4/5 rounded-2xl" />
         ))}
       </div>
     </div>
@@ -57,7 +57,7 @@ export default function DashboardHomePage() {
   return (
     <div className="flex flex-col gap-10">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div className="group relative col-span-1 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-purple-900/20 to-surface-raised sm:col-span-2">
+        <div className="group relative col-span-1 overflow-hidden rounded-2xl bg-linear-to-br from-primary/30 via-purple-900/20 to-surface-raised sm:col-span-2">
           <div className="relative z-10 flex h-full min-h-[180px] flex-col justify-between p-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-primary">

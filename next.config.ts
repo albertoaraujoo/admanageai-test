@@ -17,7 +17,23 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'tempfile.aiquickdraw.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.aiquickdraw.com',
+      },
+      {
+        protocol: 'https',
         hostname: '**.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh4.googleusercontent.com',
       },
     ],
   },

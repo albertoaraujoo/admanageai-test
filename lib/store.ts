@@ -9,10 +9,13 @@ interface AppStore {
   generatedProjects: GeneratedProject[]
   clearWorkspace: () => void
   upgradeToPro: () => void
+  downgradeToPro: () => void
   addProduct: (product: Product) => void
   updateProduct: (id: string, updates: Partial<Product>) => void
+  deleteProduct: (id: string) => void
   addProject: (project: GeneratedProject) => void
   updateProject: (id: string, updates: Partial<GeneratedProject>) => void
+  deleteProject: (id: string) => void
 }
 
 export const useAppStore = create<AppStore>()(
@@ -30,6 +33,10 @@ export const useAppStore = create<AppStore>()(
         set({ isPro: true })
       },
 
+      downgradeToPro: () => {
+        set({ isPro: false })
+      },
+
       addProduct: (product) => {
         set((state) => ({ products: [product, ...state.products] }))
       },
@@ -40,6 +47,10 @@ export const useAppStore = create<AppStore>()(
             p.id === id ? { ...p, ...updates } : p
           ),
         }))
+      },
+
+      deleteProduct: (id) => {
+        set((state) => ({ products: state.products.filter((p) => p.id !== id) }))
       },
 
       addProject: (project) => {
@@ -53,6 +64,12 @@ export const useAppStore = create<AppStore>()(
           generatedProjects: state.generatedProjects.map((p) =>
             p.id === id ? { ...p, ...updates } : p
           ),
+        }))
+      },
+
+      deleteProject: (id) => {
+        set((state) => ({
+          generatedProjects: state.generatedProjects.filter((p) => p.id !== id),
         }))
       },
     }),

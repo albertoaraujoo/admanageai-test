@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { RefreshCw } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import type { Ad } from '@/types/ad'
 import { RecreateModal } from './recreate-modal'
 import { ModalPortal } from '@/components/ui/modal-portal'
@@ -17,9 +17,9 @@ export function RecreateButton({ ad }: RecreateButtonProps) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-black/60 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm transition-all hover:bg-black/80 hover:border-white/40 active:scale-95"
+        className="flex items-center gap-1.5 rounded-xl border border-primary/50 bg-linear-to-r from-primary/90 to-blue-500/80 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-primary/30 backdrop-blur-sm transition-all hover:brightness-110 active:scale-95"
       >
-        <RefreshCw size={12} />
+        <Sparkles size={12} />
         Recreate
       </button>
 
