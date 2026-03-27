@@ -2,6 +2,9 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
+    // Avoid production failures on /_next/image (e.g. 402 from optimization pipeline).
+    // External image URLs are loaded directly.
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
