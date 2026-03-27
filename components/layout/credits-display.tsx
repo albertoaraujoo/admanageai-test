@@ -59,7 +59,12 @@ export function CreditsDisplay() {
         />
       )}
       <span>
-        <span className={isEmpty ? 'text-destructive' : 'text-foreground'}>{credits}</span>{' '}
+        <span
+          key={balance}
+          className={`credit-tick ${isEmpty ? 'text-destructive' : 'text-foreground'}`}
+        >
+          {credits}
+        </span>{' '}
         credits
       </span>
     </div>

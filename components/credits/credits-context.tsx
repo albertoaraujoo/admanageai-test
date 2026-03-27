@@ -18,6 +18,7 @@ type CreditsContextValue = {
   loading: boolean
   error: string | null
   refresh: () => Promise<void>
+  optimisticDecrement: () => void
 }
 
 const CreditsContext = createContext<CreditsContextValue | null>(null)
@@ -63,9 +64,14 @@ export function CreditsProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener(REFRESH_EVENT, onRefresh)
   }, [refresh])
 
+  const optimisticDecrement = useCallback(() => {
+    setBalance((b) => (b !== null ? b - 1 : b))
+    requestCreditsRefresh()
+  }, [])
+
   const value = useMemo(
-    () => ({ balance, loading, error, refresh }),
-    [balance, loading, error, refresh]
+    () => ({ balance, loading, error, refresh, optimisticDecrement }),
+    [balance, loading, error, refresh, optimisticDecrement]
   )
 
   return <CreditsContext.Provider value={value}>{children}</CreditsContext.Provider>

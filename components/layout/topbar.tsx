@@ -1,20 +1,30 @@
-import { CreditsDisplay } from './credits-display'
+'use client'
+
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { UpgradeButton } from './upgrade-button'
-import { UserAvatar } from './user-avatar'
-import { Settings } from 'lucide-react'
+import { RenderQueueButton } from './render-queue-button'
+import { useSidebar } from './sidebar-context'
 
 export function Topbar() {
+  const { collapsed, toggle } = useSidebar()
+
   return (
-    <header className="flex h-14 shrink-0 items-center justify-end gap-3 border-b border-border bg-surface-raised px-6">
-      <CreditsDisplay />
-      <UpgradeButton />
+    <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-surface-raised px-4">
+      {/* Left: sidebar toggle */}
       <button
+        onClick={toggle}
+        title={collapsed ? 'Open sidebar' : 'Close sidebar'}
         className="flex h-8 w-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-white/5 hover:text-foreground"
-        aria-label="Settings"
+        aria-label={collapsed ? 'Open sidebar' : 'Close sidebar'}
       >
-        <Settings size={15} />
+        {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
       </button>
-      <UserAvatar />
+
+      {/* Right: queue + upgrade */}
+      <div className="flex items-center gap-3">
+        <RenderQueueButton />
+        <UpgradeButton />
+      </div>
     </header>
   )
 }

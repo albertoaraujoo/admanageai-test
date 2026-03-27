@@ -13,9 +13,9 @@ function AdGridSkeleton() {
           <Skeleton key={i} className="h-7 w-20" />
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
         {Array.from({ length: 10 }).map((_, i) => (
-          <Skeleton key={i} className="aspect-square rounded-xl" />
+          <Skeleton key={i} className="aspect-4/5 rounded-2xl" />
         ))}
       </div>
     </div>
@@ -53,13 +53,11 @@ const QUICK_TOOLS = [
   },
 ]
 
-export default function HomePage() {
+export default function DashboardHomePage() {
   return (
     <div className="flex flex-col gap-10">
-      {/* Hero — three feature cards like Creatify */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {/* Main card */}
-        <div className="group relative col-span-1 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-purple-900/20 to-surface-raised sm:col-span-2">
+        <div className="group relative col-span-1 overflow-hidden rounded-2xl bg-linear-to-br from-primary/30 via-purple-900/20 to-surface-raised sm:col-span-2">
           <div className="relative z-10 flex h-full min-h-[180px] flex-col justify-between p-6">
             <div>
               <p className="text-xs font-bold uppercase tracking-widest text-primary">
@@ -80,12 +78,10 @@ export default function HomePage() {
               <ArrowRight size={13} />
             </Link>
           </div>
-          {/* Decorative blobs */}
           <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-primary/20 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-4 right-16 h-24 w-24 rounded-full bg-purple-500/20 blur-2xl" />
         </div>
 
-        {/* Side cards */}
         <div className="flex flex-col gap-3">
           <div className="flex flex-1 flex-col justify-between overflow-hidden rounded-2xl border border-border bg-surface-overlay p-4">
             <p className="text-[10px] font-bold uppercase tracking-widest text-foreground-muted">
@@ -120,7 +116,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Quick tools grid */}
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {QUICK_TOOLS.map((tool) => {
           const Icon = tool.icon
@@ -145,7 +140,6 @@ export default function HomePage() {
         })}
       </div>
 
-      {/* Image Ads section */}
       <section id="image-ads" className="flex flex-col gap-4 scroll-mt-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

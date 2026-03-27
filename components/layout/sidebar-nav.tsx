@@ -15,6 +15,7 @@ import {
   Layers,
 } from 'lucide-react'
 import { twMerge } from 'tailwind-merge'
+import { useSidebar } from './sidebar-context'
 
 interface NavItem {
   label: string
@@ -22,8 +23,10 @@ interface NavItem {
   icon: React.ElementType
 }
 
+const CLICKABLE_ROUTES = new Set(['/home', '/projects', '/products'])
+
 const CREATE_LINKS: NavItem[] = [
-  { label: 'Home', href: '/', icon: Home },
+  { label: 'Home', href: '/home', icon: Home },
   { label: 'Market Trends', href: '/trends', icon: TrendingUp },
   { label: 'Projects', href: '/projects', icon: FolderOpen },
 ]
@@ -42,50 +45,83 @@ const ANALYZE_LINKS: NavItem[] = [
   { label: 'Ad Launcher', href: '/launcher', icon: Rocket },
 ]
 
-interface SidebarLinkProps {
-  item: NavItem
-}
-
-function SidebarNavLink({ item }: SidebarLinkProps) {
+function SidebarNavLink({ item, collapsed }: { item: NavItem; collapsed: boolean }) {
   const pathname = usePathname()
   const isActive = pathname === item.href
+  const isClickable = CLICKABLE_ROUTES.has(item.href)
   const Icon = item.icon
 
+  const classes = twMerge(
+    'flex items-center rounded-lg transition-all',
+    collapsed
+      ? 'h-9 w-9 justify-center'
+      : 'gap-2.5 px-3 py-[7px] text-[13px]',
+    isClickable && isActive
+      ? 'bg-primary/10 text-primary font-medium'
+      : 'text-foreground-muted hover:bg-white/5 hover:text-foreground'
+  )
+
+  if (!isClickable) {
+    return (
+      <button
+        type="button"
+        onClick={(e) => e.preventDefault()}
+        title={collapsed ? item.label : `${item.label} (coming soon)`}
+        aria-label={item.label}
+        className={classes}
+      >
+        <Icon size={14} className="shrink-0" />
+        {!collapsed && item.label}
+      </button>
+    )
+  }
+
   return (
-    <Link
-      href={item.href}
-      className={twMerge(
-        'flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[13px] transition-all',
-        isActive
-          ? 'bg-primary/10 text-primary font-medium'
-          : 'text-foreground-muted hover:bg-white/5 hover:text-foreground'
-      )}
-    >
-      <Icon size={14} />
-      {item.label}
+    <Link href={item.href} title={collapsed ? item.label : undefined} className={classes}>
+      <Icon size={14} className="shrink-0" />
+      {!collapsed && item.label}
     </Link>
   )
 }
 
-function NavSection({ title, items }: { title: string; items: NavItem[] }) {
+function NavSection({
+  title,
+  items,
+  collapsed,
+}: {
+  title: string
+  items: NavItem[]
+  collapsed: boolean
+}) {
   return (
     <div className="flex flex-col gap-0.5">
-      <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-foreground-subtle">
-        {title}
-      </p>
+      {!collapsed && (
+        <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-widest text-foreground-subtle">
+          {title}
+        </p>
+      )}
       {items.map((item) => (
-        <SidebarNavLink key={item.href} item={item} />
+        <SidebarNavLink key={item.href} item={item} collapsed={collapsed} />
       ))}
     </div>
   )
 }
 
 export function SidebarNav() {
+  const { collapsed } = useSidebar()
+
   return (
-    <nav className="flex flex-1 flex-col gap-5 overflow-y-auto px-2 py-4">
-      <NavSection title="Create" items={CREATE_LINKS} />
-      <NavSection title="Manage Assets" items={ASSET_LINKS} />
-      <NavSection title="Analyze & Launch Ads" items={ANALYZE_LINKS} />
+    <nav
+      className={twMerge(
+        'flex flex-1 flex-col overflow-y-auto py-4',
+        collapsed ? 'items-center gap-1 px-1.5' : 'gap-5 px-2'
+      )}
+    >
+      <NavSection title="Create" items={CREATE_LINKS} collapsed={collapsed} />
+      {collapsed && <div className="my-1 h-px w-6 bg-border" />}
+      <NavSection title="Manage Assets" items={ASSET_LINKS} collapsed={collapsed} />
+      {collapsed && <div className="my-1 h-px w-6 bg-border" />}
+      <NavSection title="Analyze & Launch Ads" items={ANALYZE_LINKS} collapsed={collapsed} />
     </nav>
   )
 }

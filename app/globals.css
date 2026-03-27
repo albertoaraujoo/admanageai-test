@@ -82,3 +82,46 @@ body {
   outline: 2px solid rgba(124, 92, 252, 0.6);
   outline-offset: 2px;
 }
+
+/* ── Credits tick animation ─────────────────────────────────── */
+@keyframes credit-tick {
+  0% {
+    transform: translateY(-40%);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(4%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.credit-tick {
+  display: inline-block;
+  animation: credit-tick 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── Marketing landing marquee ─────────────────────────────── */
+@keyframes landing-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.landing-marquee {
+  animation: landing-marquee-scroll 45s linear infinite;
+}
+
+.landing-hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.landing-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
